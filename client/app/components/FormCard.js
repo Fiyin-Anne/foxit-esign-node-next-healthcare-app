@@ -1,13 +1,13 @@
 'use client'
 
 import InputText from './InputText';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const FormCard = ({ cardTitle, handleInput, handleFormSubmit }) =>  {
 
     return (
-        <div className='h-screen bg-gray-200 w-full flex justify-center items-center'>
+        <div className='h-[calc(100vh-55px)] bg-gray-200 w-full flex justify-center items-center'>
             <form className="mt-6">
                 <div className="card w-96 bg-base-100 shadow-xl">
                     <div className='card-body items-center text-center'>
@@ -46,9 +46,7 @@ const FormCard = ({ cardTitle, handleInput, handleFormSubmit }) =>  {
             </form>
             <ToastContainer />
         </div>
-        
     )
-
 };
 
  

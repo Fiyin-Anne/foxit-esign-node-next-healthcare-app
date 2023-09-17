@@ -2,8 +2,7 @@ import Link from 'next/link';
 
 const AboutPage = () => {
     return (
-
-        <div className="hero min-h-screen bg-base-200">
+        <div className="hero min-h-[calc(100vh-60px)] bg-base-200">
             <div className="hero-content text-center">
                 <div className="max-w-md">
                     <h1 className="text-5xl font-bold">About the App</h1>

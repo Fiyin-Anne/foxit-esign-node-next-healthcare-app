@@ -1,6 +1,36 @@
+'use client'
+
 import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
+import io from 'socket.io-client';
+
+let socket = null;
 
 const NavBar = () => {
+
+	const [notifications, setNotifications] = useState([]);
+	const [newNotification, setNewNotification] = useState(false);
+
+	const handleIndicator = () => {
+		if (newNotification) {
+			setNewNotification(false)
+		}
+	}
+
+	useEffect(() => {
+		if (socket == null) {
+			socket = io('http://localhost:8000');
+		}
+
+		socket.on('notifications', (data) => {
+			const updatedNotification = [...notifications];
+			data.currentTime = String(new Date().toLocaleTimeString('en-US'));
+			updatedNotification.push(data);
+			setNotifications(updatedNotification.reverse());
+			setNewNotification(true);
+		});
+	}, [notifications]);
+
 	return (
 		<div className="navbar bg-base-100">
 			<div className="navbar-start">
@@ -24,18 +54,36 @@ const NavBar = () => {
 				</div>
 			</div>
 			<div className="navbar-center">
-				<h2 className="normal-case text-xl">Sample Healthcare App</h2>
+				<h2 className="normal-case text-xl font-semibold">Sample Healthcare App</h2>
 			</div>
 			<div className="navbar-end">
-				<button className="btn btn-ghost btn-circle">
-					<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-				</button>
-				<button className="btn btn-ghost btn-circle">
-					{/* <div className="indicator"> */}
-					<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
-					{/* <span className="badge badge-xs badge-primary indicator-item"></span> */}
-					{/* </div> */}
-				</button>
+				<details className="dropdown dropdown-end">
+					<summary className="m-0.5 btn btn-circle btn-ghost" onClick={handleIndicator}>
+						<div className="indicator">
+							<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+							{newNotification ? (
+								<span className="badge badge-xs badge-primary indicator-item"></span>
+							) : null}
+						</div>
+					</summary>
+					<ul tabIndex={0} className="menu dropdown-content z-[1] p-2 shadow bg-base-100 w-80 h-auto mt-4 border-x-stone-400">
+						{notifications.length ? (
+							notifications.map((notification, index) => (
+								<li key={`${index}`} className={index !== 0 ? "pb-1 mb-2 border-t border-gray-300" : "pb-1 mb-1"}>
+									<div className="border-solid h-16">
+										<p className='font-semibold'>{notification.message}</p>
+										<br/>
+										<p className='absolute bottom-0 right-0 text-right text-xs text-gray-600 mb-4'>{notification.currentTime}</p>
+									</div>
+								</li>
+							))
+						) : (
+							<div className="border-b-primary-500 w-96">
+								<p className="font-semibold text-center">No notifications</p>
+							</div>
+						)}
+					</ul>
+				</details>
 			</div>
 		</div>
 	);

@@ -1,0 +1,62 @@
+'use client'
+
+import notify from '../../lib/toasts';
+import React, { useState, useEffect } from 'react';
+import Loading from '../../components/Loading';
+import Success from '../../components/Success';
+import CustomError from '../../components/CustomError';
+
+const FormSubmittedPage = async ({ params, searchParams }) => {
+
+	const [isError, setIsError] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            let response = await fetch('http://localhost:8000/api/patient/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: params.id,
+                    folderId: searchParams.folderId,
+                    signingSuccess: searchParams.event === "signing_success",
+                })
+            });
+
+            const responseJson = await response.json();
+            if (!response.ok) {
+                setIsError(true)
+                setIsLoading(false)
+                notify({
+                    message: responseJson,
+                    display: true,
+                    type: "error"
+                })
+            } else {
+                setIsLoading(false)
+            }
+        };
+
+        fetchData();
+    }, [params.id, searchParams.folderId, searchParams.event]);
+
+    return (
+        <div>
+			{isLoading && <Loading />}
+            {!isError ? 
+                <Success 
+                    title='Success!' 
+                    subtext='Patient successfully registered' 
+                    retry='/patients/registration' 
+                /> : <CustomError retry='/patients/registration'/>
+            }
+        </div>
+    )
+
+};
+
+
+export default FormSubmittedPage;

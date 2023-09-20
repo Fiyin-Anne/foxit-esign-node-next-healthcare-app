@@ -1,10 +1,9 @@
 'use client'
 
 import Link from 'next/link';
-import DownloadComplete from './DownloadComplete';
+import Success from './Success';
 
 import React, { useState, useEffect } from 'react';
-
 import 'react-toastify/dist/ReactToastify.css';
 
 const Download = ({ downloadUrl }) => {
@@ -15,7 +14,7 @@ const Download = ({ downloadUrl }) => {
     };
     
     if (isDownloaded) {
-        return <DownloadComplete />
+        return <Success title='Downloading!' subtext='Download in progress...' retry='/patients/request-record' />
     }
 
     return (

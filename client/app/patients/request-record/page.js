@@ -5,7 +5,7 @@ import FormCard from '../../components/FormCard';
 import Download from '../../components/Download';
 import notify from '../../lib/toasts';
 
-const DownloadPage = () => {
+const RequestRecordPage = () => {
 
 	const [downloadUrl, setDownloadUrl] = useState(null);
 	const [formData, setFormData] = useState({
@@ -51,4 +51,4 @@ const DownloadPage = () => {
 	)
 }
 
-export default DownloadPage;
+export default RequestRecordPage;

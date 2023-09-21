@@ -23,13 +23,27 @@ const NavBar = () => {
 		}
 
 		socket.on('notifications', (data) => {
+			setNewNotification(true);
 			const updatedNotification = [...notifications];
 			data.currentTime = String(new Date().toLocaleTimeString('en-US'));
 			updatedNotification.push(data);
 			setNotifications(updatedNotification.reverse());
-			setNewNotification(true);
+
+			localStorage.setItem('notifications', JSON.stringify(updatedNotification));
+			localStorage.setItem('newNotification', JSON.stringify(true));
 		});
-	}, [notifications]);
+
+		const storedNotifications = JSON.parse(localStorage.getItem('notifications'));
+		const storedNewNotification = JSON.parse(localStorage.getItem('newNotification'));
+
+		if (storedNotifications) {
+			setNotifications(storedNotifications);
+		}
+		if (storedNewNotification) {
+			setNewNotification(storedNewNotification);
+		}
+
+	}, []);
 
 	return (
 		<div className="navbar bg-base-100">

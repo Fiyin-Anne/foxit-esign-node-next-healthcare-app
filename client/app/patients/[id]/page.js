@@ -20,7 +20,7 @@ const FormSubmittedPage = async ({ params, searchParams }) => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    id: params.id,
+                    id: Number(params.id),
                     folderId: searchParams.folderId,
                     signingSuccess: searchParams.event === "signing_success",
                 })

@@ -2,7 +2,7 @@ const axios = require('axios');
 
 const generateToken = async () => {
     try {
-        const response = await axios.post('https://na1.foxitesign.foxit.com/api/oauth2/access_token', {
+        const response = await axios.post(`${process.env.HOST_NAME}/api/oauth2/access_token`, {
             client_id: process.env.API_KEY,
             client_secret: process.env.API_SECRET,
             scope: 'read-write',
@@ -28,7 +28,7 @@ const generateSigningSession = async (data) => {
 
         if(!token) throw new Error('No token generated.');
 
-        response = await axios.post('https://na1.foxitesign.foxit.com/api/templates/createFolder',
+        response = await axios.post(`${process.env.HOST_NAME}/api/templates/createFolder`,
             {
                 "folderName": "Patient Registeration",
                 "templateIds": [
@@ -74,7 +74,7 @@ const downloadDocument = async (data) => {
 
         let { folderId, docNumber } = data;
         docNumber = Number(docNumber)*1 || 1;
-        let downloadUrl = `https://na1.foxitesign.foxit.com/api/folders/document/download?folderId=${folderId}&docNumber=${docNumber=1}&access_token=${token}`;
+        let downloadUrl = `${process.env.HOST_NAME}/api/folders/document/download?folderId=${folderId}&docNumber=${docNumber=1}&access_token=${token}`;
         return downloadUrl;
     } catch (err) {
         throw new Error(err.message)
